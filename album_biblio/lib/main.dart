@@ -4,13 +4,12 @@ void main() => runApp(const ProfileCardApp());
 
 class ProfileCardApp extends StatelessWidget {
   const ProfileCardApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Mi Tarjeta de Perfil',
       home: Scaffold(
-        backgroundColor: Colors.blue[50],
+        backgroundColor: const Color.fromARGB(255, 192, 3, 3),
         body: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Center(
@@ -34,11 +33,11 @@ class ProfileCardApp extends StatelessWidget {
                     children: [
                       const CircleAvatar(
                         radius: 50,
-                        backgroundImage: AssetImage('assets/kristian.jpeg'),
+                        backgroundImage: AssetImage('assets/ct.jpeg'),
                       ),
                       const SizedBox(height: 15),
                       Text(
-                        'Corridos Tumbados',
+                        'ꛕͲ',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -46,7 +45,7 @@ class ProfileCardApp extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Ingenieria Informatica',
+                        'ꛕorridos Ͳumbados',
                         style: TextStyle(
                           fontSize: 16,
                           color: const Color.fromARGB(255, 255, 251, 251),
@@ -58,7 +57,7 @@ class ProfileCardApp extends StatelessWidget {
                         'Es un subgénero de la música regional mexicana, específicamente del corrido, con elementos de música urbana y narcocorrido. ',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color.fromARGB(221, 245, 240, 240),
+                          color: Color.fromARGB(221, 252, 252, 252),
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -68,7 +67,10 @@ class ProfileCardApp extends StatelessWidget {
                         children: [
                           Icon(Icons.email, color: Color.fromARGB(244, 243, 179, 40)),
                           SizedBox(width: 8),
-                          Text('l22330882@hermosillo.tecnm.mx'),
+                          Text('LosCt@gmail.com',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255), // Color RGB
+                            ),),
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -77,7 +79,11 @@ class ProfileCardApp extends StatelessWidget {
                         children: [
                           Icon(Icons.phone, color: Colors.green),
                           SizedBox(width: 8),
-                          Text('+52 662 682 9732'),
+                          Text('+52 662 630 8027',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255), // Color RGB
+                            ),),
+                          
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -86,7 +92,10 @@ class ProfileCardApp extends StatelessWidget {
                         children: [
                           Icon(Icons.location_on, color: Colors.red),
                           SizedBox(width: 8),
-                          Text('Hermosillo, Sonora'),
+                          Text('Hermosillo, Sonora',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255), // Color RGB
+                            ),),
                         ],
                       ),
                     ],
