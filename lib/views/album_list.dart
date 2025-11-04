@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:album_biblio/model/albumbiblio.dart';
 
-// PASO 1: Se agregaron los imports para las nuevas pantallas
-import 'package:album_biblio/vistas/album_vista.dart';
-import 'package:album_biblio/vistas/perfil_usuario.dart';
+// ===== CAMBIOS AQUÍ (de 'vistas' a 'views') =====
+import 'package:album_biblio/views/album_vista.dart';
+import 'package:album_biblio/views/perfil_usuario.dart';
+// ===============================================
 
-// (Tu widget principal no cambia)
 class AlbumLista extends StatefulWidget {
-  const AlbumLista({Key? key}) : super(key: key);
+  const AlbumLista({super.key});
 
   @override
   State<AlbumLista> createState() => _AlbumListaState();
 }
 
-// (Tu clase de estado)
 class _AlbumListaState extends State<AlbumLista> {
   int selectedAlbum = 0;
   late AlbumBiblio albumes;
@@ -21,7 +20,6 @@ class _AlbumListaState extends State<AlbumLista> {
   @override
   void initState() {
     super.initState();
-    // Tu lista de álbumes se queda intacta
     albumes = AlbumBiblio();
     albumes.addAlbum(Album(
         titulo: "Mi Vida Mi Muerte",
@@ -71,8 +69,6 @@ class _AlbumListaState extends State<AlbumLista> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Biblioteca de Álbumes"),
-
-        // PASO 2: Se agregó el menú de perfil (Código 7-26)
         actions: [
           PopupMenuButton(
             itemBuilder: (context) => [
@@ -83,14 +79,8 @@ class _AlbumListaState extends State<AlbumLista> {
             onSelected: (value) {
               setState(() {
                 if (value == 1) {
-                  // NAVEGA A LA PANTALLA DE PERFIL
-                  
-                  // ===== INICIO DE LA CORRECCIÓN =====
                   Navigator.of(context).push(MaterialPageRoute(
-                      // El nombre de la CLASE va con Mayúscula
                       builder: (context) => const PerfilUsuario()));
-                  // ===== FIN DE LA CORRECCIÓN =====
-
                 } else if (value == 2) {
                   // Aquí se mostrará una página con datos de la aplicación
                 }
@@ -99,14 +89,12 @@ class _AlbumListaState extends State<AlbumLista> {
           ),
         ],
       ),
-      // Tu body no cambia
       body: ListView(
         padding: const EdgeInsets.all(10),
         children: ListTile.divideTiles(
                 context: context, tiles: crearLista(), color: Colors.amber)
             .toList(),
       ),
-      // Tu FloatingActionButton no cambia
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Acción para agregar nuevo álbum (aún vacía)
@@ -117,7 +105,6 @@ class _AlbumListaState extends State<AlbumLista> {
     );
   }
 
-  // Tu función crearLista no cambia
   List<Widget> crearLista() {
     final List<Widget> lista = [];
     for (int i = 0; i < albumes.albumes.length; i++) {
@@ -141,27 +128,22 @@ class _AlbumListaState extends State<AlbumLista> {
     return lista;
   }
 
-  // Tu función albumTapped no cambia
   void albumTapped(int i) {
     setState(() {
       selectedAlbum = i;
     });
   }
 
-  // Tu función crearButtonsBar SÍ cambia
   Widget crearButtonsBar(int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
             tooltip: "Ver",
-            // PASO 3: Se modificó el onPressed del botón "Ver" (Código 7-24)
             onPressed: () {
-              // Llama a la nueva función de navegación
               mostrarAlbum(context, index);
             },
             icon: const Icon(Icons.search)),
-        // Tus otros botones no cambian
         IconButton(
             tooltip: "Editar",
             onPressed: () {}, // Acción (aún vacía)
@@ -174,14 +156,11 @@ class _AlbumListaState extends State<AlbumLista> {
     );
   }
 
-  // PASO 4: Se agregó la nueva función para navegar (Código 7-24)
   void mostrarAlbum(BuildContext context, int index) {
-    // Obtenemos el álbum específico de tu lista
     Album albumSeleccionado = albumes.albumes[index];
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        // Le pasamos el álbum seleccionado a la nueva pantalla AlbumVista
         builder: (context) => AlbumVista(album: albumSeleccionado),
       ),
     );
