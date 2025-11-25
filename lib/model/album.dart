@@ -10,56 +10,52 @@ const Map<Genre, String> genres = {
   Genre.regional: "Regional",
 };
 
-
 class Album {
-  late String? _id;
-  late String _titulo;
-  late String _artista;
-  late int _anio;
-  late Genre _genre;
+  int? id;
+  String titulo;
+  String artista;
+  int anio;
+  Genre genre;
 
-  Album(this._titulo, this._artista, this._anio, this._genre);
+  // Constructor normal
+  Album({
+    this.id,
+    required this.titulo,
+    required this.artista,
+    required this.anio,
+    required this.genre,
+  });
 
-  Album.vacio() {
-    _titulo = "";
-    _artista = "";
-    _anio = 0;
-    _genre = Genre.undefined;
+  // Constructor para cuando esta vacio
+  Album.vacio({
+    this.id = 0,
+    this.titulo = "",
+    this.artista = "",
+    this.anio = 0,
+    this.genre = Genre.undefined,
+  });
+
+  // Convertir de Map a Objeto (Para leer de la BD)
+  Album.fromMap(Map<String, dynamic> map) 
+      : id = map['id'],
+        titulo = map['titulo'],
+        artista = map['artista'],
+        anio = map['anio'],
+        genre = Genre.values.byName(map['genre']);
+
+  // Convertir de Objeto a Map (Para guardar en BD)
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'titulo': titulo,
+      'artista': artista,
+      'anio': anio,
+      'genre': genre.name,
+    };
   }
 
-  
-  String get titulo => _titulo;
-  String get artista => _artista;
-  int get anio => _anio;
-  Genre get genre => _genre;
-  String get generos => genres[_genre] ?? "Desconocido";
-
-  set titulo(String titulo) => _titulo;
-  set artista(String artista) => _artista;
-  set anio(int anio) => _anio;
-  set genre(Genre genero) => _genre;
-
-
-  @override
-  String toString() {
-    return "Album{id: $_id, titulo: $_titulo, artista, $_artista, anio: $_anio, genre:${_genre.name}}";
+  // Getter para el texto del genero
+  String get generos {
+    return genres[genre] ?? "Desconocido";
   }
-
-  
-
-  
-  Album.fromJson(Map<String, dynamic> json)
-      : _titulo = json['titulo'],
-        _artista = json['artista'],
-        _anio = json['anio'],
-        
-        _genre = Genre.values.byName(json['genre']); 
-
-  
-  Map<String, dynamic> toJson() => {
-        'titulo': _titulo,
-        'artista': _artista,
-        'anio': _anio,
-        'genre': _genre.name,
-      };
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358683122878",
+    "project_id": "album-biblio-1d2e5",
+    "storage_bucket": "album-biblio-1d2e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358683122878:android:8410897524c5cd738852ef",
+        "android_client_info": {
+          "package_name": "com.example.album_biblio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9Kj7kZxA-kodzkG5nSp1rpzBsc8y5-ko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

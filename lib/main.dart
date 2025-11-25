@@ -3,25 +3,44 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:album_biblio/model/albumbiblio.dart';
-import 'package:album_biblio/vistas/album_list.dart';
 
-void main() {
-  
+// Importaciones de Firebase
+import 'package:firebase_core/firebase_core.dart';
+import 'package:album_biblio/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'; // Para Google
+
+// Importaciones de idioma
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
+import 'model/etiquetas_esp.dart'; // Tus traducciones
+
+// Importaciones de vistas
+import 'vistas/pagina_login.dart';
+import 'vistas/album_list.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   
-  AlbumBiblio.leerArchivo().then((albumes) {
-    
-    runApp(
-      ChangeNotifierProvider(create: (_) {
-        // Decide si empezar con una lista vacía o con la lista cargada
-        AlbumBiblio albumBiblio = (albumes == null)
-            ? AlbumBiblio() // No había archivo, empieza de cero
-            : AlbumBiblio.fromJson(albumes); // Carga los datos del archivo
-        return albumBiblio;
-      }, child: const MyApp()),
-    );
-  });
+  // 1. Inicializar Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // 2. Configurar los proveedores (Correo y Google)
+  FirebaseUIAuth.configureProviders([
+    EmailAuthProvider(),
+    // Esto habilita el boton de "Entrar con Google"
+    GoogleProvider(clientId: DefaultFirebaseOptions.currentPlatform.appId),
+  ]);
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AlbumBiblio(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -31,48 +50,47 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'AlbumBiblio',
-      
-      
-      theme: ThemeData(
-        
-        colorScheme: const ColorScheme.dark(
-          primary: Color.fromARGB(255, 192, 3, 3), // Rojo principal
-          onPrimary: Colors.white,       
-          secondary: Colors.redAccent,   
-          background: Color.fromARGB(255, 3, 3, 3),   // Fondo negro
-          onBackground: Colors.white,   
-          surface: Color.fromARGB(255, 3, 3, 3),    // Fondo de "tarjetas" (negro)
-          onSurface: Colors.white,      // Texto sobre las tarjetas (blanco)
-        ),
-        
-        
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromARGB(255, 192, 3, 3), // Fondo rojo
-          foregroundColor: Colors.white, // Título y botones en blanco
-        ),
-        
-        
-        scaffoldBackgroundColor: const Color.fromARGB(255, 3, 3, 3),
+      debugShowCheckedModeBanner: false,
 
-        
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: const Color.fromARGB(255, 192, 3, 3), // Fondo rojo
-          foregroundColor: Colors.black, // Color del ícono '+'
+      // TEMA ROJO Y NEGRO
+      theme: ThemeData(
+        colorScheme: const ColorScheme.dark(
+          primary: Color.fromARGB(255, 192, 3, 3),
+          onPrimary: Colors.white,
+          secondary: Colors.redAccent,
+          background: Color.fromARGB(255, 3, 3, 3),
+          surface: Color.fromARGB(255, 3, 3, 3),
         ),
-        
-        
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 3, 3, 3), // Fondo negro
-            foregroundColor: Colors.white, 
-          ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color.fromARGB(255, 192, 3, 3),
+          foregroundColor: Colors.white,
         ),
-        
+        scaffoldBackgroundColor: const Color.fromARGB(255, 3, 3, 3),
         useMaterial3: true,
       ),
-      
 
-      home: const AlbumLista(),
+      // IDIOMA ESPAÑOL
+      localizationsDelegates: [
+        FirebaseUILocalizations.withDefaultOverrides(const EtiquetasEsp()),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        FirebaseUILocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('es', 'MX')],
+
+      // NAVEGACIÓN (Login <-> Home)
+      initialRoute: FirebaseAuth.instance.currentUser == null ? '/login' : '/home',
+      routes: {
+        '/login': (context) => const PaginaLogin(),
+        '/home': (context) => const AlbumLista(),
+        '/profile': (context) => ProfileScreen(
+          actions: [
+            SignedOutAction((context) {
+              Navigator.pushReplacementNamed(context, '/login');
+            }),
+          ],
+        ),
+      },
     );
   }
 }
